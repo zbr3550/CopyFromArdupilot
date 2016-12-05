@@ -69,14 +69,16 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
     // @Description: Control what protocol to use on the Telem2 port. Note that the Frsky options require external converter hardware. See the wiki for details.
     // @Values: -1:None, 1:MAVlink1, 2:MAVLink2, 3:Frsky D-PORT, 4:Frsky S-PORT, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Lidar
     // @User: Standard
-    AP_GROUPINFO("2_PROTOCOL",  3, AP_SerialManager, state[2].protocol, SerialProtocol_MAVLink),
+///    AP_GROUPINFO("2_PROTOCOL",  3, AP_SerialManager, state[2].protocol, SerialProtocol_MAVLink),
+    AP_GROUPINFO("2_PROTOCOL",  3, AP_SerialManager, state[2].protocol, SerialProtocol_Lanc),
 
     // @Param: 2_BAUD
     // @DisplayName: Telemetry 2 Baud Rate
     // @Description: The baud rate of the Telem2 port. The APM2 can support all baudrates up to 115, and also can support 500. The PX4 can support rates of up to 1500. If you setup a rate you cannot support on APM2 and then can't connect to your board you should load a firmware from a different vehicle type. That will reset all your parameters to defaults.
     // @Values: 1:1200,2:2400,4:4800,9:9600,19:19200,38:38400,57:57600,111:111100,115:115200,500:500000,921:921600,1500:1500000
     // @User: Standard
-    AP_GROUPINFO("2_BAUD", 4, AP_SerialManager, state[2].baud, AP_SERIALMANAGER_MAVLINK_BAUD/1000),
+ ///   AP_GROUPINFO("2_BAUD", 4, AP_SerialManager, state[2].baud, AP_SERIALMANAGER_MAVLINK_BAUD/1000),
+    AP_GROUPINFO("2_BAUD", 4, AP_SerialManager, state[2].baud, AP_SERIALMANAGER_LANC_BAUD/1000),
 
     // @Param: 3_PROTOCOL
     // @DisplayName: Serial 3 (GPS) protocol selection
@@ -98,6 +100,7 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
     // @Values: -1:None, 1:MAVlink1, 2:MAVLink2, 3:Frsky D-PORT, 4:Frsky S-PORT, 5:GPS, 7:Alexmos Gimbal Serial, 8:SToRM32 Gimbal Serial, 9:Lidar
     // @User: Standard
     AP_GROUPINFO("4_PROTOCOL",  7, AP_SerialManager, state[4].protocol, SerialProtocol_GPS),
+//    AP_GROUPINFO("4_PROTOCOL",  7, AP_SerialManager, state[4].protocol, SerialProtocol_Lanc),
 
     // @Param: 4_BAUD
     // @DisplayName: Serial 4 Baud Rate
@@ -105,6 +108,7 @@ const AP_Param::GroupInfo AP_SerialManager::var_info[] = {
     // @Values: 1:1200,2:2400,4:4800,9:9600,19:19200,38:38400,57:57600,111:111100,115:115200,500:500000,921:921600,1500:1500000
     // @User: Standard
     AP_GROUPINFO("4_BAUD", 8, AP_SerialManager, state[4].baud, AP_SERIALMANAGER_GPS_BAUD/1000),
+ //   AP_GROUPINFO("4_BAUD", 8, AP_SerialManager, state[4].baud, AP_SERIALMANAGER_LANC_BAUD/1000),
 
     // @Param: 5_PROTOCOL
     // @DisplayName: Serial5 protocol selection
@@ -201,6 +205,13 @@ void AP_SerialManager::init()
                                          AP_SERIALMANAGER_SToRM32_BUFSIZE_RX,
                                          AP_SERIALMANAGER_SToRM32_BUFSIZE_TX);
                     break;
+
+                case SerialProtocol_Lanc:
+                    state[i].uart->begin(map_baudrate(state[i].baud), 
+                                         AP_SERIALMANAGER_LANC_BUFSIZE_RX,
+                                         AP_SERIALMANAGER_LANC_BUFSIZE_TX);
+                    break;
+                    
             }
         }
     }

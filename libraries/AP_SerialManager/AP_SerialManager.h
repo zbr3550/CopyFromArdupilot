@@ -64,6 +64,10 @@
 #define AP_SERIALMANAGER_SToRM32_BUFSIZE_RX     128
 #define AP_SERIALMANAGER_SToRM32_BUFSIZE_TX     128
 
+//Lanc control  baud rates and buffer sizes
+#define AP_SERIALMANAGER_LANC_BAUD               57600
+#define AP_SERIALMANAGER_LANC_BUFSIZE_RX         128
+#define AP_SERIALMANAGER_LANC_BUFSIZE_TX         128
 
 class AP_SerialManager {
 
@@ -81,6 +85,7 @@ public:
         SerialProtocol_AlexMos = 7,
         SerialProtocol_SToRM32 = 8,
         SerialProtocol_Lidar = 9,
+        SerialProtocol_Lanc = 10,
     };
 
     // Constructor

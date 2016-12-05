@@ -89,6 +89,8 @@
 #include <AC_InputManager/AC_InputManager.h>        // Pilot input handling library
 #include <AC_InputManager/AC_InputManager_Heli.h>   // Heli specific pilot input handling library
 
+#include <AP_Lanc_Control/lanc_control.h>             // ArduPilot GPS library
+
 // Configuration
 #include "defines.h"
 #include "config.h"
@@ -162,6 +164,7 @@ private:
     DataFlash_Class DataFlash;
 
     AP_GPS gps;
+    AP_LANC lanc;
 
     // flight modes convenience array
     AP_Int8 *flight_modes;
@@ -192,6 +195,8 @@ private:
 
     // Mission library
     AP_Mission mission;
+    
+    AP_Mission::Mission_Command  user_cmd_state;
 
     // Optical flow sensor
 #if OPTFLOW == ENABLED

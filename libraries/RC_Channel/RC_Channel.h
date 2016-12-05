@@ -123,6 +123,9 @@ public:
         return _rc_ch;
     }
     
+     // pwm is stored here
+    int16_t     _radio_in;
+
     bool       in_trim_dz();
 
     int16_t    get_radio_in() const { return _radio_in;}
@@ -156,8 +159,7 @@ public:
     
 private:
 
-    // pwm is stored here
-    int16_t     _radio_in;
+
     // value generated from PWM
     int16_t     _control_in;
     // current values to the servos - degrees * 100 (approx assuming servo is -45 to 45 degrees except [3] is 0 to 100

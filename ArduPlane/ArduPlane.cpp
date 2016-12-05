@@ -183,9 +183,9 @@ void Plane::ahrs_update()
 void Plane::update_speed_height(void)
 {
     if (auto_throttle_mode) {
-	    // Call TECS 50Hz update. Note that we call this regardless of
-	    // throttle suppressed, as this needs to be running for
-	    // takeoff detection
+        // Call TECS 50Hz update. Note that we call this regardless of
+        // throttle suppressed, as this needs to be running for
+        // takeoff detection
         SpdHgt_Controller->update_50hz();
     }
 }
@@ -521,7 +521,15 @@ void Plane::handle_auto_mode(void)
         calc_throttle();
     } else if (nav_cmd_id == MAV_CMD_NAV_LAND) {
         calc_nav_roll();
-        calc_nav_pitch();
+  ///      calc_nav_pitch();
+        channel_throttle->set_servo_out(0);      
+        set_mode(STALL);
+
+        static uint32_t land_cnt;
+        land_cnt ++;
+        if(land_cnt%100==0){
+            gcs_send_text(MAV_SEVERITY_CRITICAL,"land");
+        }
         
         if (auto_state.land_complete) {
             // during final approach constrain roll to the range
@@ -573,8 +581,11 @@ void Plane::update_flight_mode(void)
 
     switch (effective_mode) 
     {
+    case STALL:
+        break;
+
     case AUTO:
-        handle_auto_mode();
+          handle_auto_mode();
         break;
 
     case GUIDED:
@@ -624,6 +635,7 @@ void Plane::update_flight_mode(void)
     }
 
     case ACRO: {
+        set_mode(STALL);
         // handle locked/unlocked control
         if (acro_state.locked_roll) {
             nav_roll_cd = acro_state.locked_roll_err;
@@ -809,6 +821,7 @@ void Plane::update_navigation()
         update_cruise();
         break;
 
+    case STALL:
     case MANUAL:
     case STABILIZE:
     case TRAINING:

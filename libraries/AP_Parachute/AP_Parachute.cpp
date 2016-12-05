@@ -127,6 +127,7 @@ void AP_Parachute::update()
         }
         // reset released flag and release_time
         _release_in_progress = false;
+            _released = false;
         _release_time = 0;
         // update AP_Notify
         AP_Notify::flags.parachute_release = 0;
