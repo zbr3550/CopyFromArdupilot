@@ -39,7 +39,7 @@ done
             }
         }
     done
-    git submodule update --recursive || {
+    proxychains git submodule update --recursive || {
         echo "git submodule update failed"        
         git submodule status --recursive
         exit 1
