@@ -580,9 +580,19 @@ bool Plane::verify_nav_wp(const AP_Mission::Mission_Command& cmd)
     }
 
     float acceptance_distance = nav_controller->turn_distance(g.waypoint_radius, auto_state.next_turn_angle);
+    static uint16_t index_temp;              
     if (cmd.p1 > 0) {
+//    if (cmd.content.distance.meters > 0) {
         // allow user to override acceptance radius
         acceptance_distance = cmd.p1;
+     //   acceptance_distance = cmd.content.distance.meters;
+        if(index_temp != mission.get_current_nav_cmd().index){        
+             index_temp = mission.get_current_nav_cmd().index;    
+             gcs_send_text_fmt(MAV_SEVERITY_INFO, "waypoint #%i radius %3.2fm",
+                          (unsigned)mission.get_current_nav_cmd().index,
+                          cmd.p1);
+        }
+
     }
     
     if (auto_state.wp_distance <= acceptance_distance) {

@@ -538,8 +538,10 @@ MAV_MISSION_RESULT AP_Mission::mavlink_int_to_mission_cmd(const mavlink_mission_
           in the cmd structure. When we expand the mission structure
           we can do this properly
          */
-///#if APM_BUILD_TYPE(APM_BUILD_ArduPlane)
-#if 1
+
+        cmd.content.distance.meters = packet.param2;
+
+#if APM_BUILD_TYPE(APM_BUILD_ArduPlane)
         // acceptance radius in meters
         cmd.p1 = packet.param2;
 #else
