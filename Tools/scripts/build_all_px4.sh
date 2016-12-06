@@ -9,7 +9,7 @@ set -e
 set -x
 
 git submodule init
-git submodule update
+proxychains git submodule update
 
 for d in ArduPlane ArduCopter APMrover2; do
     pushd $d
