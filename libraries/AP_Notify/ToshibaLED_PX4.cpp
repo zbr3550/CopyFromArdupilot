@@ -71,10 +71,27 @@ void ToshibaLED_PX4::update_timer(void)
     v.red   = newv.r;
     v.green = newv.g;
     v.blue  = newv.b;
+/*    v.red   = 100;
+    v.green = 100;
+    v.blue  = 100;*/
 
     ioctl(_rgbled_fd, RGBLED_SET_RGB, (unsigned long)&v);
+/*    ioctl(_rgbled_fd, RGBLED_SET_COLOR, RGBLED_COLOR_PURPLE);
+    ioctl(_rgbled_fd, RGBLED_SET_MODE, RGBLED_MODE_BREATHE);*/
 
     last.v = next.v;
+}
+
+bool ToshibaLED_PX4::rgbled_set_color(unsigned long color)
+{
+    ioctl(_rgbled_fd, RGBLED_SET_COLOR,color);
+    return true;
+}
+
+bool ToshibaLED_PX4::rgbled_set_mode(unsigned long mode)
+{
+    ioctl(_rgbled_fd, RGBLED_SET_MODE, mode);
+    return true;
 }
 
 #endif // CONFIG_HAL_BOARD == HAL_BOARD_PX4

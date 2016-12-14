@@ -27,6 +27,8 @@ class ToshibaLED_PX4 : public ToshibaLED
 public:
     bool hw_init(void);
     bool hw_set_rgb(uint8_t r, uint8_t g, uint8_t b);
+    bool rgbled_set_color(unsigned long color);
+    bool rgbled_set_mode(unsigned long mode);
 private:
     int _rgbled_fd;
     void update_timer(void);

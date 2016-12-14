@@ -34,6 +34,7 @@ public:
 
     // set_rgb - set color as a combination of red, green and blue levels from 0 ~ 15
     virtual void set_rgb(uint8_t red, uint8_t green, uint8_t blue);
+     virtual void set_mode(unsigned long color, unsigned long mode);
 
     // update - updates led according to timed_updated.  Should be
     // called at 50Hz
@@ -43,6 +44,8 @@ protected:
     // methods implemented in hardware specific classes
     virtual bool hw_init(void) = 0;
     virtual bool hw_set_rgb(uint8_t red, uint8_t green, uint8_t blue) = 0;
+    virtual bool rgbled_set_color(unsigned long color) = 0;
+    virtual bool rgbled_set_mode(unsigned long mode) = 0;
 
     // meta-data common to all hw devices
     uint8_t counter;
@@ -54,6 +57,8 @@ protected:
     uint8_t _led_bright;
     uint8_t _led_medium;
     uint8_t _led_dim;
+    unsigned long _color_curr,_mode_curr;    // color mode requested by timed update
+    unsigned long _color_des,_mode_des;     // current  color mode  displayed by the led
 private:
     virtual void update_colours();
 };

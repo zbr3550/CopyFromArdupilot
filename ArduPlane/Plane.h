@@ -577,6 +577,7 @@ private:
 
     // The instantaneous desired pitch angle.  Hundredths of a degree
     int32_t nav_pitch_cd;
+    bool set_pith_max;
 
     // we separate out rudder input to allow for RUDDER_ONLY=1
     int16_t rudder_input;

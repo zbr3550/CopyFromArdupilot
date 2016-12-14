@@ -139,6 +139,8 @@ void Copter::parachute_release()
     gcs_send_text(MAV_SEVERITY_INFO,"Parachute: Released");
     Log_Write_Event(DATA_PARACHUTE_RELEASED);
 
+        set_pith_max = true;
+                 gcs_send_text(MAV_SEVERITY_CRITICAL,"set_pith_max: true");
     // disarm motors
     init_disarm_motors();
 

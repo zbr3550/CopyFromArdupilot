@@ -597,6 +597,8 @@ bool Plane::suppress_throttle(void)
     if (auto_throttle_mode && parachute.release_initiated()) {
         // throttle always suppressed in auto-throttle modes after parachute release initiated
         throttle_suppressed = true;
+                 gcs_send_text(MAV_SEVERITY_CRITICAL,"suppress set_pith_max: true");
+       set_pith_max = true;
         return true;
     }
 #endif
@@ -604,6 +606,8 @@ bool Plane::suppress_throttle(void)
     if (!throttle_suppressed) {
         // we've previously met a condition for unsupressing the throttle
         return false;
+       set_pith_max = false;
+                 gcs_send_text(MAV_SEVERITY_CRITICAL,"suppress set_pith_max: false");
     }
     if (!auto_throttle_mode) {
         // the user controls the throttle
@@ -812,6 +816,8 @@ uint16_t Plane::throttle_min(void) const
 };
 
 
+  uint16_t Stall_Pitch_Servo_Pwm;
+ /// uint16_t Stall_Throttle_Servo_Pwm;
 /*****************************************
 * Set the flight control servos based on the current calculated values
 *****************************************/
@@ -877,7 +883,14 @@ void Plane::set_servos(void)
         RC_Channel_aux::copy_radio_in_out(RC_Channel_aux::k_aileron_with_input);
         RC_Channel_aux::copy_radio_in_out(RC_Channel_aux::k_elevator_with_input);
 
-    } else {
+    } else if(control_mode == STALL){
+     ///       channel_pitch->set_radio_out(1111);
+      ///      channel_throttle->set_radio_out(1011);
+            channel_pitch->set_radio_out(Stall_Pitch_Servo_Pwm);
+            channel_throttle->set_radio_out(1000);
+            channel_roll->set_radio_out(channel_roll->get_radio_in());
+            channel_rudder->set_radio_out(channel_rudder->get_radio_in());
+    }else {
         if (g.mix_mode == 0) {
             // both types of secondary aileron are slaved to the roll servo out
             RC_Channel_aux::set_servo_out_for(RC_Channel_aux::k_aileron, channel_roll->get_servo_out());
@@ -893,25 +906,25 @@ void Plane::set_servos(void)
             ch1 = channel_pitch->get_servo_out() - (BOOL_TO_SIGN(g.reverse_elevons) * channel_roll->get_servo_out());
             ch2 = channel_pitch->get_servo_out() + (BOOL_TO_SIGN(g.reverse_elevons) * channel_roll->get_servo_out());
 
-			/* Differential Spoilers
+            /* Differential Spoilers
                If differential spoilers are setup, then we translate
                rudder control into splitting of the two ailerons on
                the side of the aircraft where we want to induce
                additional drag.
              */
-			if (RC_Channel_aux::function_assigned(RC_Channel_aux::k_dspoiler1) && RC_Channel_aux::function_assigned(RC_Channel_aux::k_dspoiler2)) {
-				float ch3 = ch1;
-				float ch4 = ch2;
-				if ( BOOL_TO_SIGN(g.reverse_elevons) * channel_rudder->get_servo_out() < 0) {
-				    ch1 += abs(channel_rudder->get_servo_out());
-				    ch3 -= abs(channel_rudder->get_servo_out());
-				} else {
-					ch2 += abs(channel_rudder->get_servo_out());
-				    ch4 -= abs(channel_rudder->get_servo_out());
-				}
-				RC_Channel_aux::set_servo_out_for(RC_Channel_aux::k_dspoiler1, ch3);
-				RC_Channel_aux::set_servo_out_for(RC_Channel_aux::k_dspoiler2, ch4);
-			}
+            if (RC_Channel_aux::function_assigned(RC_Channel_aux::k_dspoiler1) && RC_Channel_aux::function_assigned(RC_Channel_aux::k_dspoiler2)) {
+                float ch3 = ch1;
+                float ch4 = ch2;
+                if ( BOOL_TO_SIGN(g.reverse_elevons) * channel_rudder->get_servo_out() < 0) {
+                    ch1 += abs(channel_rudder->get_servo_out());
+                    ch3 -= abs(channel_rudder->get_servo_out());
+                } else {
+                    ch2 += abs(channel_rudder->get_servo_out());
+                    ch4 -= abs(channel_rudder->get_servo_out());
+                }
+                RC_Channel_aux::set_servo_out_for(RC_Channel_aux::k_dspoiler1, ch3);
+                RC_Channel_aux::set_servo_out_for(RC_Channel_aux::k_dspoiler2, ch4);
+            }
 
             // directly set the radio_out values for elevon mode
             channel_roll->set_radio_out(elevon.trim1 + (BOOL_TO_SIGN(g.reverse_ch1_elevon) * (ch1 * 500.0f/ SERVO_MAX)));
@@ -1003,6 +1016,10 @@ void Plane::set_servos(void)
         } else if (suppress_throttle()) {
             // throttle is suppressed in auto mode
             channel_throttle->set_servo_out(0);
+            channel_pitch->set_servo_out(1987);
+            nav_roll_cd = 4500;
+                    nav_roll_cd = constrain_int32(nav_roll_cd, -roll_limit_cd, roll_limit_cd);
+        update_load_factor();
             if (g.throttle_suppress_manual) {
                 // manual pass through of throttle while throttle is suppressed
                 channel_throttle->set_radio_out(channel_throttle->get_radio_in());

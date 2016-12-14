@@ -26,7 +26,7 @@ int8_t Plane::main_menu_help(uint8_t argc, const Menu::arg *argv)
 
 // Command/function table for the top-level menu.
 static const struct Menu::command main_menu_commands[] = {
-//   command		function called
+//   command        function called
 //   =======        ===============
     {"logs",        MENU_FUNC(process_logs)},
     {"setup",       MENU_FUNC(setup_mode)},
@@ -387,6 +387,7 @@ void Plane::set_mode(enum FlightMode mode)
         auto_throttle_mode = true;
         break;
 
+    case STALL:
     case MANUAL:
     case STABILIZE:
     case TRAINING:
@@ -490,6 +491,7 @@ void Plane::set_mode(enum FlightMode mode)
 bool Plane::mavlink_set_mode(uint8_t mode)
 {
     switch (mode) {
+    case STALL:
     case MANUAL:
     case CIRCLE:
     case STABILIZE:
@@ -661,6 +663,9 @@ void Plane::check_usb_mux(void)
 void Plane::print_flight_mode(AP_HAL::BetterStream *port, uint8_t mode)
 {
     switch (mode) {
+    case STALL:
+        port->print("STALL");
+        break;
     case MANUAL:
         port->print("Manual");
         break;
