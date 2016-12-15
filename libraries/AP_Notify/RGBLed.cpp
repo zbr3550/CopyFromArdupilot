@@ -253,7 +253,8 @@ void RGBLed::update_colours(void)
          //        set_mode(RGBLED_COLOR_GREEN,RGBLED_MODE_BLINK_FAST);
                 _color_des = RGBLED_COLOR_GREEN;
                 _mode_des = RGBLED_MODE_BLINK_FAST;
-            }else if (AP_Notify::flags.gps_status >= AP_GPS::GPS_OK_FIX_3D && AP_Notify::flags.pre_arm_gps_check) {
+            }
+             if (AP_Notify::flags.gps_status >= AP_GPS::GPS_OK_FIX_3D && AP_Notify::flags.pre_arm_gps_check) {
                 // flashing green if disarmed with GPS 3d lock
         //        set_mode(RGBLED_COLOR_GREEN,RGBLED_MODE_BREATHE);
                 _color_des = RGBLED_COLOR_GREEN;
