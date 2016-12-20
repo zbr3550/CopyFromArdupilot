@@ -68,7 +68,7 @@ void RGBLed::set_rgb(uint8_t red, uint8_t green, uint8_t blue)
     }
 }
 
-// set_rgb - set color as a combination of red, green and blue values
+// set_mode - set color and flash mode for rgbled
 void RGBLed::set_mode(unsigned long color, unsigned long mode)
 {
     // return immediately if not enabled
@@ -131,14 +131,18 @@ void RGBLed::update_colours(void)
     if (AP_Notify::flags.initialising) {
         if (step & 1) {
             // odd steps display red light
-            _red_des = brightness;
+/*            _red_des = brightness;
             _blue_des = _led_off;
-            _green_des = _led_off;
+            _green_des = _led_off;*/
+                    _color_des = RGBLED_COLOR_RED;
+                    _mode_des = RGBLED_MODE_ON;
         } else {
             // even display blue light
-            _red_des = _led_off;
+/*            _red_des = _led_off;
             _blue_des = brightness;
-            _green_des = _led_off;
+            _green_des = _led_off;*/
+                    _color_des = RGBLED_COLOR_BLUE;
+                    _mode_des = RGBLED_MODE_ON;
         }
 
         // exit so no other status modify this pattern
@@ -152,34 +156,42 @@ void RGBLed::update_colours(void)
             case 3:
             case 6:
                 // red on
-                _red_des = brightness;
+/*                _red_des = brightness;
                 _blue_des = _led_off;
-                _green_des = _led_off;
+                _green_des = _led_off;*/
+                    _color_des = RGBLED_COLOR_RED;
+                    _mode_des = RGBLED_MODE_ON;
                 break;
 
             case 1:
             case 4:
             case 7:
                 // blue on
-                _red_des = _led_off;
+/*                _red_des = _led_off;
                 _blue_des = brightness;
-                _green_des = _led_off;
+                _green_des = _led_off;*/
+                    _color_des = RGBLED_COLOR_BLUE;
+                    _mode_des = RGBLED_MODE_ON;
                 break;
 
             case 2:
             case 5:
             case 8:
                 // green on
-                _red_des = _led_off;
+/*                _red_des = _led_off;
                 _blue_des = _led_off;
-                _green_des = brightness;
+                _green_des = brightness;*/
+                    _color_des = RGBLED_COLOR_GREEN;
+                    _mode_des = RGBLED_MODE_ON;
                 break;
 
             case 9:
                 // all off
-                _red_des = _led_off;
+/*                _red_des = _led_off;
                 _blue_des = _led_off;
-                _green_des = _led_off;
+                _green_des = _led_off;*/
+                    _color_des = RGBLED_COLOR_OFF;
+                    _mode_des = RGBLED_MODE_OFF;
                 break;
         }
         // exit so no other status modify this pattern
@@ -198,9 +210,11 @@ void RGBLed::update_colours(void)
             case 3:
             case 4:
                 // yellow on
-                _red_des = brightness;
+/*                _red_des = brightness;
                 _blue_des = _led_off;
-                _green_des = brightness;
+                _green_des = brightness;*/
+            _color_des = RGBLED_COLOR_YELLOW;
+            _mode_des = RGBLED_MODE_ON;
                 break;
             case 5:
             case 6:
@@ -209,14 +223,18 @@ void RGBLed::update_colours(void)
             case 9:
                 if (AP_Notify::flags.ekf_bad) {
                     // red on if ekf bad
-                    _red_des = brightness;
+/*                    _red_des = brightness;
                     _blue_des = _led_off;
-                    _green_des = _led_off;
+                    _green_des = _led_off;*/
+                    _color_des = RGBLED_COLOR_RED;
+                    _mode_des = RGBLED_MODE_ON;
                 }else{
                     // all off for radio or battery failsafe
-                    _red_des = _led_off;
+/*                    _red_des = _led_off;
                     _blue_des = _led_off;
-                    _green_des = _led_off;
+                    _green_des = _led_off;*/
+                    _color_des = RGBLED_COLOR_OFF;
+                    _mode_des = RGBLED_MODE_OFF;
                 }
                 break;
         }
@@ -228,14 +246,19 @@ void RGBLed::update_colours(void)
     if (AP_Notify::flags.armed) {
         // solid green if armed with GPS 3d lock
         if (AP_Notify::flags.gps_status >= AP_GPS::GPS_OK_FIX_3D) {
-            _red_des = _led_off;
-            _blue_des = _led_off;
-            _green_des = brightness;
+   ///         _red_des = _led_off;
+   ///         _blue_des = _led_off;
+   ///         _green_des = brightness;
+            _color_des = RGBLED_COLOR_GREEN;
+            _mode_des = RGBLED_MODE_ON;
         }else{
             // solid blue if armed with no GPS lock
-            _red_des = _led_off;
-            _blue_des = brightness;
-            _green_des = _led_off;
+    //        _red_des = _led_off;
+    //        _blue_des = brightness;
+    //        _green_des = _led_off;
+            _color_des = RGBLED_COLOR_BLUE;
+            _mode_des = RGBLED_MODE_ON;
+
         }
         return;
     }else{
@@ -253,8 +276,7 @@ void RGBLed::update_colours(void)
          //        set_mode(RGBLED_COLOR_GREEN,RGBLED_MODE_BLINK_FAST);
                 _color_des = RGBLED_COLOR_GREEN;
                 _mode_des = RGBLED_MODE_BLINK_FAST;
-            }
-             if (AP_Notify::flags.gps_status >= AP_GPS::GPS_OK_FIX_3D && AP_Notify::flags.pre_arm_gps_check) {
+            }else if (AP_Notify::flags.gps_status >= AP_GPS::GPS_OK_FIX_3D && AP_Notify::flags.pre_arm_gps_check) {
                 // flashing green if disarmed with GPS 3d lock
         //        set_mode(RGBLED_COLOR_GREEN,RGBLED_MODE_BREATHE);
                 _color_des = RGBLED_COLOR_GREEN;
