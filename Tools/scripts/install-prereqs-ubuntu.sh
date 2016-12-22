@@ -61,9 +61,9 @@ while getopts "y" opt; do
 done
 
 if $ASSUME_YES; then
-    APT_GET="sudo apt-get -qq --assume-yes"
+    APT_GET="sudo proxychains apt-get -qq --assume-yes"
 else
-    APT_GET="sudo apt-get"
+    APT_GET="sudo proxychains apt-get"
 fi
 
 # possibly grab a newer cmake for older ubuntu releases
@@ -84,9 +84,9 @@ sudo pip2 -q install -U $PYTHON_PKGS
 if [ ! -d $OPT/$ARM_ROOT ]; then
     (
         cd $OPT;
-        sudo wget $ARM_TARBALL_URL;
+        sudo proxychains wget $ARM_TARBALL_URL;
         sudo tar xjf ${ARM_TARBALL};
-        sudo rm ${ARM_TARBALL};
+       # sudo rm ${ARM_TARBALL};
     )
 fi
 
@@ -118,5 +118,5 @@ apt-cache search arm-none-eabi
 (
  cd $ARDUPILOT_ROOT
  git submodule init
- git submodule update
+ proxychains git submodule update
 )
