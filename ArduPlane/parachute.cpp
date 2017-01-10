@@ -25,6 +25,12 @@ void Plane::parachute_release()
 
     // release parachute
     parachute.release();
+
+#if USE_STALL_LANDING
+    set_mode(STALL, MODE_REASON_GCS_COMMAND);
+    gcs_send_text(MAV_SEVERITY_CRITICAL,"Plane: Set Mode -> Stall");
+#endif
+
 }
 
 /*

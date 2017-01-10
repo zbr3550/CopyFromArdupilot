@@ -25,4 +25,4 @@ CHECK_MODULES:
 all: CHECK_MODULES
 
 module-update:
-	git submodule update
+	proxychains4 git submodule update

@@ -33,6 +33,7 @@ void Plane::send_heartbeat(mavlink_channel_t chan)
     // the APM flight mode and has a well defined meaning in the
     // ArduPlane documentation
     switch (control_mode) {
+    case STALL: 
     case MANUAL:
     case TRAINING:
     case ACRO:
@@ -176,6 +177,7 @@ void Plane::send_extended_status1(mavlink_channel_t chan)
     }
 
     switch (control_mode) {
+    case STALL:        
     case MANUAL:
         break;
 

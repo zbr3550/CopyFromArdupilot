@@ -12,6 +12,7 @@
 #define SERVO_MAX 4500  // This value represents 45 degrees and is just an
                         // arbitrary representation of servo max travel.
 
+#define USE_STALL_LANDING  1  //add by Brown, whether we should use stall landing
 // failsafe
 // ----------------------
 enum failsafe_state {
@@ -65,7 +66,8 @@ enum FlightMode {
     QHOVER        = 18,
     QLOITER       = 19,
     QLAND         = 20,
-    QRTL          = 21
+    QRTL          = 21,
+    STALL = 22
 };
 
 enum mode_reason_t {

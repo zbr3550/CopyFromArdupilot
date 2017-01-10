@@ -389,6 +389,7 @@ void Plane::set_mode(enum FlightMode mode, mode_reason_t reason)
         auto_navigation_mode = false;
         break;
 
+    case STALL:
     case MANUAL:
     case STABILIZE:
     case TRAINING:
@@ -506,6 +507,7 @@ void Plane::set_mode(enum FlightMode mode, mode_reason_t reason)
 bool Plane::mavlink_set_mode(uint8_t mode)
 {
     switch (mode) {
+    case STALL:
     case MANUAL:
     case CIRCLE:
     case STABILIZE:
@@ -679,6 +681,9 @@ void Plane::check_usb_mux(void)
 void Plane::print_flight_mode(AP_HAL::BetterStream *port, uint8_t mode)
 {
     switch (mode) {
+    case STALL:
+        port->print("STALL");
+        break;
     case MANUAL:
         port->print("Manual");
         break;

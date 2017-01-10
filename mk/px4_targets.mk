@@ -113,9 +113,9 @@ px4-v4: $(BUILDROOT)/make.flags CHECK_MODULES $(MAVLINK_HEADERS) $(PX4_ROOT)/Arc
 # force the 3 build types to not run in parallel. We got bad binaries with incorrect parameter handling
 # when these were allowed to happen in parallel
 px4:
-	$(MAKE) px4-v1
+#	$(MAKE) px4-v1
 	$(MAKE) px4-v2
-	$(MAKE) px4-v4
+#	$(MAKE) px4-v4
 
 px4-clean: clean CHECK_MODULES px4-archives-clean px4-cleandep
 	$(v) /bin/rm -rf $(PX4_ROOT)/makefiles/build $(PX4_ROOT)/Build $(PX4_ROOT)/Images/*.px4 $(PX4_ROOT)/Images/*.bin
@@ -145,8 +145,10 @@ px4-v4-upload: px4-v4
 	$(RULEHDR)
 	$(v) $(PX4_MAKE) px4fmu-v4_APM upload
 
-px4-upload: px4-v1-upload
+px4-upload: px4-v2-upload
 
+px4u: px4-v2-upload
+	
 px4-archives-clean:
 	$(v) /bin/rm -rf $(PX4_ROOT)/Archives
 

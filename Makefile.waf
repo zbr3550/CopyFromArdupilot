@@ -11,7 +11,7 @@ all: $(WAF_BINARY)
 	@$(WAF) build
 
 $(WAF_BINARY):
-	@git submodule init && git submodule update
+	@proxychains4 git submodule init && git submodule update
 
 waf-%: $(WAF_BINARY)
 	@$(WAF) $*

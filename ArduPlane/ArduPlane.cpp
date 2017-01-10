@@ -580,6 +580,9 @@ void Plane::update_flight_mode(void)
 
     switch (effective_mode) 
     {
+    case STALL:
+        break;
+
     case AUTO:
         handle_auto_mode();
         break;
@@ -819,6 +822,8 @@ void Plane::update_navigation()
         update_cruise();
         break;
 
+
+    case STALL:
     case MANUAL:
     case STABILIZE:
     case TRAINING:

@@ -848,7 +848,9 @@ uint16_t Plane::throttle_min(void) const
     return channel_throttle->get_reverse() ? channel_throttle->get_radio_max() : channel_throttle->get_radio_min();
 };
 
-
+#if USE_STALL_LANDING
+uint16_t Stall_Pitch_Servo_Pwm;
+#endif
 /*****************************************
 * Set the flight control servos based on the current calculated values
 *****************************************/
@@ -922,7 +924,18 @@ void Plane::set_servos(void)
         RC_Channel_aux::copy_radio_in_out(RC_Channel_aux::k_aileron_with_input);
         RC_Channel_aux::copy_radio_in_out(RC_Channel_aux::k_elevator_with_input);
 
-    } else {
+    }
+#if USE_STALL_LANDING
+    else if(control_mode == STALL){
+     ///       channel_pitch->set_radio_out(1111);
+      ///      channel_throttle->set_radio_out(1011);
+            channel_pitch->set_radio_out(Stall_Pitch_Servo_Pwm);
+            channel_throttle->set_radio_out(1000);
+            channel_roll->set_radio_out(channel_roll->get_radio_in());
+            channel_rudder->set_radio_out(channel_rudder->get_radio_in());
+    } 
+#endif
+    else {
         if (g.mix_mode == 0) {
             // both types of secondary aileron are slaved to the roll servo out
             RC_Channel_aux::set_servo_out_for(RC_Channel_aux::k_aileron, channel_roll->get_servo_out());

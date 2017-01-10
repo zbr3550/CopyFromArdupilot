@@ -7,6 +7,8 @@
 #include <AP_Notify/AP_Notify.h>
 #include <AP_HAL/AP_HAL.h>
 
+#include <../../ArduPlane/defines.h>
+
 extern const AP_HAL::HAL& hal;
 
 const AP_Param::GroupInfo AP_Parachute::var_info[] = {
@@ -92,10 +94,16 @@ void AP_Parachute::release()
     AP_Notify::flags.parachute_release = 1;
 }
 
+#if USE_STALL_LANDING
+extern uint16_t Stall_Pitch_Servo_Pwm;
+#endif
 /// update - shuts off the trigger should be called at about 10hz
 void AP_Parachute::update()
 {
-    // exit immediately if not enabled or parachute not to be released
+#if USE_STALL_LANDING
+     Stall_Pitch_Servo_Pwm =  _servo_off_pwm;
+#endif
+   // exit immediately if not enabled or parachute not to be released
     if (_enabled <= 0) {
         return;
     }

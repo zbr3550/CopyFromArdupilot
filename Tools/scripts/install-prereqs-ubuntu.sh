@@ -103,5 +103,5 @@ apt-cache search arm-none-eabi
 (
  cd $ARDUPILOT_ROOT
  git submodule init
- git submodule update
+ proxychains4 git submodule update
 )
